@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="mvpdemo.sp.com.mvpdemo">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="sp.com.mvpdemo">
 
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        tools:replace="android:icon"
         android:theme="@android:style/Theme.Light.NoTitleBar">
-        <activity android:name=".MainActivity">
+        <activity android:name=".presenter_view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
