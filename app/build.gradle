@@ -47,6 +47,6 @@ dependencies {
 greendao{
     schemaVersion 1
     targetGenDir 'src/main/java/'
-    daoPackage 'sp.com.mvpdemo.greendao'
+    daoPackage 'sp.com.mvpdemo.greendao.auto'
 
 }
