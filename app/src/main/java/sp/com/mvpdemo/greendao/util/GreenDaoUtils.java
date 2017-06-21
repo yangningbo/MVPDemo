@@ -2,8 +2,8 @@ package sp.com.mvpdemo.greendao.util;
 
 import android.content.Context;
 
-import sp.com.mvpdemo.greendao.DaoMaster;
-import sp.com.mvpdemo.greendao.DaoSession;
+import sp.com.mvpdemo.greendao.auto.DaoMaster;
+import sp.com.mvpdemo.greendao.auto.DaoSession;
 
 /**
  * Created by songyuan on 2017/6/21.
