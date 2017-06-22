@@ -14,6 +14,8 @@ import android.widget.ListView;
 
 import com.orhanobut.logger.Logger;
 
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -36,6 +38,11 @@ public class ResultFragment extends Fragment implements ResultContact.View {
     @Bind(R.id.et_query_click)
     EditText et_query_click;
 
+    public static ResultFragment newInstance() {
+        ResultFragment fragment = new ResultFragment();
+        return fragment;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -57,7 +64,8 @@ public class ResultFragment extends Fragment implements ResultContact.View {
     public void onClickEtQuery(View view) {
         Fragment fragmentTo = activity.getFragmentManager().findFragmentByTag(CommonConfig.SEARCH_FRAGMENT_TAG);
         if(fragmentTo==null){
-            fragmentTo = new SearchFragment();
+            fragmentTo = SearchFragment.newInstance();
+            new SearchPresenter((SearchFragment)fragmentTo);
         }
         FragmentUtils.switchFragment(activity, this, fragmentTo, CommonConfig.SEARCH_FRAGMENT_TAG)
                 .commit();
@@ -79,7 +87,7 @@ public class ResultFragment extends Fragment implements ResultContact.View {
 
     @Override
     public void showMusicList(Object o) {
-        MusicBean musicBean = (MusicBean) o;
+        List<MusicBean> musicBean = (List<MusicBean>) o;
         Logger.d(musicBean.toString());
     }
 }

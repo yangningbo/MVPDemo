@@ -60,7 +60,7 @@ public class AutoFeedView extends ViewGroup {
         int xEnd = CHILD_LINE_ROW_MARGIN;//子view右下角x坐标(包含右间距,最终需去除间距)
         int yEnd = 0;//子view右下角y坐标(包含下间距,最终需去除间距)
         int rowCount = 1;
-        int realWidth = r - l - CHILD_LINE_ROW_MARGIN * 2;
+        int realWidth = r - l;//此处r是onMeasure已经计算过的宽度的right坐标
         int childChildCount = getChildCount();
         for (int i = 0; i < childChildCount; i++) {
             View childView = getChildAt(i);
@@ -74,10 +74,9 @@ public class AutoFeedView extends ViewGroup {
             yEnd = CHILD_LINE_ROW_MARGIN + rowCount * (childHeight + CHILD_LINE_ROW_MARGIN);
             xStart = xEnd - (childWidth + CHILD_LINE_ROW_MARGIN);
             yStart = yEnd - (childHeight + CHILD_LINE_ROW_MARGIN);
-            Logger.d("onLayout ===> xStart=" + xStart + ";xEnd=" + xEnd + ";childWidth=" + childWidth + ";yStart=" + yStart + ";childHeight=" + childHeight + ";yEnd=" + yEnd);
+            Logger.d("onLayout ===> i= "+i+";childChildCount="+childChildCount+";xStart=" + xStart + ";xEnd=" + xEnd + ";childWidth=" + childWidth + ";yStart=" + yStart + ";childHeight=" + childHeight + ";yEnd=" + yEnd+ ";rowCount=" + rowCount+ ";realWidth=" + realWidth);
             childView.layout(xStart, yStart, xEnd - CHILD_LINE_ROW_MARGIN, yEnd - CHILD_LINE_ROW_MARGIN);
         }
-        invalidate();
     }
 
     @Override
@@ -105,7 +104,7 @@ public class AutoFeedView extends ViewGroup {
             }
 
         }
-        Logger.d("onMeasure ===> realWidth=" + realWidth + ";addViewsHeight=" + addViewsHeight);
+        Logger.d("onMeasure ===> realWidth=" + realWidth + ";addViewsHeight=" + addViewsHeight+ ";rowCount=" + rowCount);
         //设置计算结果，重写onMeasure必须的
         setMeasuredDimension(realWidth, addViewsHeight);
     }

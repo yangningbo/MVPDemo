@@ -2,23 +2,26 @@ package sp.com.mvpdemo.presenter_view;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
 
+import java.util.Collections;
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.Subscriber;
 import sp.com.mvpdemo.R;
 import sp.com.mvpdemo.config.CommonConfig;
+import sp.com.mvpdemo.modle.Keyword;
 import sp.com.mvpdemo.my_views.AutoFeedView;
 import sp.com.mvpdemo.utils.FragmentUtils;
 import sp.com.mvpdemo.utils.SoftInputUtils;
@@ -39,6 +42,12 @@ public class SearchFragment extends Fragment implements SearchContact.View {
 
     private String kw;
 
+    public static SearchFragment newInstance() {
+        SearchFragment fragment = new SearchFragment();
+        return fragment;
+    }
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -50,19 +59,12 @@ public class SearchFragment extends Fragment implements SearchContact.View {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP) {
-                    SoftInputUtils.hideSoftInput(activity, et_query_input);
                     kw = et_query_input.getText().toString();
                     et_query_input.setText("");
-                    TextView textView = new TextView(activity);
-                    textView.setBackgroundResource(R.drawable.kw_bg);
-                    textView.setText(kw);
-                    afv_history_kw.addView(textView);
-                    //TODO 保存关键字到数据库
-
+                    // 保存关键字到数据库
+                    mPresenter.saveKwToDB(activity, kw);
                     toResult(kw);
                 }
-
-
                 return false;
             }
         });
@@ -70,9 +72,11 @@ public class SearchFragment extends Fragment implements SearchContact.View {
         afv_history_kw.setOnItemClickListener(new AutoFeedView.OnItemClickListener() {
             @Override
             public void onItemClick(ViewGroup parent, View view) {
-                String historyKw = ((TextView) view).getText().toString();
-                et_query_input.setText(historyKw);
-                toResult(historyKw);
+                String kw = ((TextView) view).getText().toString();
+                et_query_input.setText("");
+                // 保存关键字到数据库
+                mPresenter.saveKwToDB(activity, kw);
+                toResult(kw);
             }
         });
 
@@ -80,10 +84,12 @@ public class SearchFragment extends Fragment implements SearchContact.View {
         return view;
     }
 
+
     @Override
     public void onResume() {
         super.onResume();
-        SoftInputUtils.openSoftInput(activity);
+        SoftInputUtils.showSoftInput(activity,et_query_input);
+        showKeywordHistory();
     }
 
     @Override
@@ -106,9 +112,43 @@ public class SearchFragment extends Fragment implements SearchContact.View {
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden) {
-            SoftInputUtils.openSoftInput(activity);
+            SoftInputUtils.showSoftInput(activity,et_query_input);
+            showKeywordHistory();
+        }else{
+            SoftInputUtils.hideSoftInput(activity,et_query_input);
         }
     }
 
+
+    private void showKeywordHistory(){
+        mPresenter.getKwFromDB(activity)
+                .subscribe(new Subscriber<List<Keyword>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<Keyword> keywords) {
+                        Logger.d(keywords.size());
+                        if (keywords.size() > 0) {
+                            Collections.reverse(keywords);
+                            afv_history_kw.removeAllViews();
+                            for (int i = 0; i < keywords.size(); i++) {
+                                TextView textView = new TextView(activity);
+                                textView.setBackgroundResource(R.drawable.kw_bg);
+                                textView.setText(keywords.get(i).getKw());
+                                textView.setTag(keywords.get(i).getId());
+                                afv_history_kw.addView(textView);
+                            }
+                        }
+                    }
+                });
+    }
 
 }

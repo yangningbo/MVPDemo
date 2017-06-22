@@ -28,7 +28,7 @@ public class MainActivity extends FragmentActivity {
 
         fm = this.getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        ResultFragment resultFragment = new ResultFragment();
+        ResultFragment resultFragment =  ResultFragment.newInstance();
         ft.add(R.id.fl_main, resultFragment, CommonConfig.RESULT_FRAGMENT_TAG);
         ft.commit();
 
