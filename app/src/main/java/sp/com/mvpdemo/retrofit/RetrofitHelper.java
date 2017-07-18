@@ -70,9 +70,9 @@ public class RetrofitHelper {
                 .map(new Func1<JsonObject, List<MusicBean>>() {
                     @Override
                     public List<MusicBean> call(JsonObject jsonObject) {
-                        JsonArray musicJA = jsonObject.get("musics").getAsJsonArray();
-                        List<MusicBean> musicBeanList = new Gson().fromJson(musicJA, new TypeToken<ArrayList<MusicBean>>() {
-                        }.getType());
+                        List<MusicBean> musicBeanList = new Gson()
+                                .fromJson(jsonObject.get("musics").getAsJsonArray(), new TypeToken<ArrayList<MusicBean>>() {
+                                }.getType());
                         return musicBeanList;
                     }
                 })

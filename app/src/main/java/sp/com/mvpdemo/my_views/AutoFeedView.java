@@ -74,7 +74,7 @@ public class AutoFeedView extends ViewGroup {
             yEnd = CHILD_LINE_ROW_MARGIN + rowCount * (childHeight + CHILD_LINE_ROW_MARGIN);
             xStart = xEnd - (childWidth + CHILD_LINE_ROW_MARGIN);
             yStart = yEnd - (childHeight + CHILD_LINE_ROW_MARGIN);
-            Logger.d("onLayout ===> i= "+i+";childChildCount="+childChildCount+";xStart=" + xStart + ";xEnd=" + xEnd + ";childWidth=" + childWidth + ";yStart=" + yStart + ";childHeight=" + childHeight + ";yEnd=" + yEnd+ ";rowCount=" + rowCount+ ";realWidth=" + realWidth);
+//            Logger.d("onLayout ===> i= "+i+";childChildCount="+childChildCount+";xStart=" + xStart + ";xEnd=" + xEnd + ";childWidth=" + childWidth + ";yStart=" + yStart + ";childHeight=" + childHeight + ";yEnd=" + yEnd+ ";rowCount=" + rowCount+ ";realWidth=" + realWidth);
             childView.layout(xStart, yStart, xEnd - CHILD_LINE_ROW_MARGIN, yEnd - CHILD_LINE_ROW_MARGIN);
         }
     }
@@ -104,7 +104,7 @@ public class AutoFeedView extends ViewGroup {
             }
 
         }
-        Logger.d("onMeasure ===> realWidth=" + realWidth + ";addViewsHeight=" + addViewsHeight+ ";rowCount=" + rowCount);
+//        Logger.d("onMeasure ===> realWidth=" + realWidth + ";addViewsHeight=" + addViewsHeight+ ";rowCount=" + rowCount);
         //设置计算结果，重写onMeasure必须的
         setMeasuredDimension(realWidth, addViewsHeight);
     }

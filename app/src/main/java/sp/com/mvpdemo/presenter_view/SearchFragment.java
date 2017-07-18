@@ -10,8 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import com.orhanobut.logger.Logger;
+import android.widget.Toast;
 
 import java.util.Collections;
 import java.util.List;
@@ -60,10 +59,7 @@ public class SearchFragment extends Fragment implements SearchContact.View {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP) {
                     kw = et_query_input.getText().toString();
-                    et_query_input.setText("");
-                    // 保存关键字到数据库
-                    mPresenter.saveKwToDB(activity, kw);
-                    toResult(kw);
+                    saveKeyword();
                 }
                 return false;
             }
@@ -72,11 +68,8 @@ public class SearchFragment extends Fragment implements SearchContact.View {
         afv_history_kw.setOnItemClickListener(new AutoFeedView.OnItemClickListener() {
             @Override
             public void onItemClick(ViewGroup parent, View view) {
-                String kw = ((TextView) view).getText().toString();
-                et_query_input.setText("");
-                // 保存关键字到数据库
-                mPresenter.saveKwToDB(activity, kw);
-                toResult(kw);
+                kw = ((TextView) view).getText().toString();
+                saveKeyword();
             }
         });
 
@@ -88,7 +81,7 @@ public class SearchFragment extends Fragment implements SearchContact.View {
     @Override
     public void onResume() {
         super.onResume();
-        SoftInputUtils.showSoftInput(activity,et_query_input);
+        SoftInputUtils.showSoftInput(activity, et_query_input);
         showKeywordHistory();
     }
 
@@ -98,7 +91,7 @@ public class SearchFragment extends Fragment implements SearchContact.View {
     }
 
 
-    private void toResult(String kw) {
+    private void toResult() {
         FragmentUtils.switchFragment(activity, this, activity.getFragmentManager().findFragmentByTag(CommonConfig.RESULT_FRAGMENT_TAG), CommonConfig.RESULT_FRAGMENT_TAG)
                 .commit();
 
@@ -112,15 +105,15 @@ public class SearchFragment extends Fragment implements SearchContact.View {
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden) {
-            SoftInputUtils.showSoftInput(activity,et_query_input);
+            SoftInputUtils.showSoftInput(activity, et_query_input);
             showKeywordHistory();
-        }else{
-            SoftInputUtils.hideSoftInput(activity,et_query_input);
+        } else {
+            SoftInputUtils.hideSoftInput(activity, et_query_input);
         }
     }
 
 
-    private void showKeywordHistory(){
+    private void showKeywordHistory() {
         mPresenter.getKwFromDB(activity)
                 .subscribe(new Subscriber<List<Keyword>>() {
                     @Override
@@ -135,7 +128,6 @@ public class SearchFragment extends Fragment implements SearchContact.View {
 
                     @Override
                     public void onNext(List<Keyword> keywords) {
-                        Logger.d(keywords.size());
                         if (keywords.size() > 0) {
                             Collections.reverse(keywords);
                             afv_history_kw.removeAllViews();
@@ -150,5 +142,20 @@ public class SearchFragment extends Fragment implements SearchContact.View {
                     }
                 });
     }
+
+
+    private void saveKeyword() {
+
+        if (!kw.replace(" ", "").isEmpty()) {
+            et_query_input.setText("");
+            // 保存关键字到数据库
+            mPresenter.saveKwToDB(activity, kw);
+            toResult();
+        } else {
+            Toast.makeText(activity, "请输入搜索内容", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
 
 }

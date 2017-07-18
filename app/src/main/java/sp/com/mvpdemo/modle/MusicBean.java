@@ -2,6 +2,8 @@ package sp.com.mvpdemo.modle;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * Created by songyuan on 2017/6/20.
  */
@@ -11,7 +13,7 @@ public class MusicBean {
     private String id;
     private String title;
     private String image;
-    private Author author;
+    private List<Author> author;
     @SerializedName("mobile_link")
     private String mobileLink;
 
@@ -40,11 +42,11 @@ public class MusicBean {
         this.image = image;
     }
 
-    public Author getAuthor() {
+    public List<Author> getAuthor() {
         return author;
     }
 
-    public void setAuthor(Author author) {
+    public void setAuthor(List<Author> author) {
         this.author = author;
     }
 
@@ -62,7 +64,7 @@ public class MusicBean {
                 "id='" + id + '\'' +
                 ", title='" + title + '\'' +
                 ", image='" + image + '\'' +
-                ", author=" + author.toString() +
+                ", author=" + author.get(0).toString() +
                 ", mobileLink='" + mobileLink + '\'' +
                 '}';
     }
